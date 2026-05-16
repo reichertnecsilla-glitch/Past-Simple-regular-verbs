@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Past Simple Trainer – Regular Verbs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Design Brief Colors */
+    --primary-300: #F9C97A; --primary-500: #F4A329; --primary-700: #B45309;
+    --secondary-300: #7EDAD6; --secondary-500: #2BB6B4; --secondary-700: #0F766E;
+    --accent-300: #F49DB8; --accent-500: #E8467B; --accent-700: #A61E4D;
+    --bg: #FFF7F2; --surface: #FFFFFF; --surface-alt: #F5F7FA; --border: #E6E9EF;
+    --text: #1F2937; --text-2: #4B5563; --text-muted: #6B7280; --text-inverse: #FFFFFF;
+    --success: #2F9E44; --warning: #F59F00; --error: #D92D20; --info: #2563EB;
+    
+    /* Shapes & Shadows */
+    --radius-card: 16px; 
+    --radius-pill: 9999px; 
+    --shadow: 0 4px 14px rgba(31, 41, 55, 0.06);
+  }
+
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  
+  header {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  }
+  
+  header h1 {
+    margin: 0; font-size: 24px; font-weight: 600; font-family: 'Nunito', sans-serif; color: var(--primary-700);
+  }
+  
+  .wrap { max-width: 800px; margin: 0 auto; padding: 24px 20px; }
+  
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  
+  .pill {
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-pill);
+    background: var(--surface); color: var(--text-2); font-size: 13px; font-weight: 600;
+  }
+  
+  .score-pill { background: var(--secondary-300); color: var(--secondary-700); border-color: var(--secondary-500); }
+  
+  .right { margin-left: auto; display: flex; gap: 8px; }
+  
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 24px; }
+  
+  .tab {
+    padding: 10px 16px; border: 1px solid var(--border); border-radius: var(--radius-pill);
+    background: var(--surface); color: var(--text-2); cursor: pointer; font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .tab:hover { background: var(--surface-alt); }
+  .tab.active { background: var(--secondary-500); color: var(--text-inverse); border-color: transparent; }
+  
+  .panel {
+    display: none; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow);
+    animation: fadeIn 0.3s ease;
+  }
+  .panel.active { display: block; }
+  
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .sentence { font-size: 24px; margin: 16px 0; font-family: 'Nunito', sans-serif; font-weight: 600; color: var(--text); }
+  
+  input[type=text] {
+    width: 100%; padding: 14px 16px; border: 2px solid var(--border);
+    border-radius: 12px; font-size: 18px; font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; outline: none;
+  }
+  input[type=text]:focus { border-color: var(--primary-500); box-shadow: 0 0 0 3px rgba(244, 163, 41, 0.2); }
+  
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  
+  button {
+    padding: 10px 18px; border-radius: var(--radius-pill); border: 1px solid var(--border);
+    cursor: pointer; background: var(--surface); color: var(--text-2); font-weight: 600; font-size: 14px;
+    transition: all 0.2s ease; font-family: 'Inter', sans-serif;
+  }
+  button:hover { background: var(--surface-alt); transform: translateY(-1px); box-shadow: var(--shadow); }
+  button:active { transform: translateY(0); }
+  
+  button.primary { background: var(--primary-500); border: none; color: var(--text-inverse); }
+  button.primary:hover { background: var(--primary-700); }
+  
+  .feedback { min-height: 24px; margin-top: 12px; font-weight: 600; font-size: 15px; transition: color 0.2s ease; }
+  .feedback.ok { color: var(--success); }
+  .feedback.err { color: var(--error); }
+  .solution-text { font-weight: 400; opacity: 0.85; margin-left: 8px; color: var(--text-2); }
+  
+  .hint {
+    font-size: 14px; color: var(--text-2); background: #FEF3C7; border: 1px dashed var(--primary-300);
+    border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px;
+  }
+  .hint::before { content: "💡"; font-size: 16px; }
+
+  /* Input Flashes */
+  .flash-ok { background-color: #D1FADF !important; border-color: var(--success) !important; transition: none; }
+  .flash-err { background-color: #FFE4E6 !important; border-color: var(--error) !important; transition: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Past Simple Trainer • Szabályos Igék (Okos ellenőrzés)</h1>
+</header>
+
+<div class="wrap">
+  <div class="row">
+    <span class="pill">Cél: Múlt idő (-ed), Tagadás, Kérdés</span>
+    <span class="pill score-pill">Pontozás: <strong id="score">0</strong></span>
+    <div class="right">
+      <button id="resetScore">Pont nullázása</button>
+      <button id="newSeed">Új mondat</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <div class="tab active" data-tab="toPast">Múlt időbe</div>
+    <div class="tab" data-tab="neg">Tagadás</div>
+    <div class="tab" data-tab="q">Kérdés</div>
+    <div class="tab" data-tab="mix">Mix</div>
+  </div>
+
+  <section class="panel active" id="toPast">
+    <div class="hint">Tedd a mondatot múlt időbe! Figyelj a helyesírásra: <strong>-ed, -d, -ied</strong>, vagy duplázódó mássalhangzó.</div>
+    <div class="sentence" id="s_toPast">…</div>
+    <input type="text" id="i_toPast" placeholder="Írd be a megoldást…">
+    <div class="btns">
+      <button class="primary" id="c_toPast">Ellenőrzés</button>
+      <button id="s_toPast_show">Mutasd a megoldást</button>
+      <button id="n_toPast">Következő</button>
+    </div>
+    <div class="feedback" id="f_toPast"></div>
+  </section>
+
+  <section class="panel" id="neg">
+    <div class="hint">Tagadd a múlt idejű mondatot! Használd a <strong>didn't + szótári alak</strong> (base verb) formát. A főigéről eltűnik az -ed!</div>
+    <div class="sentence" id="s_neg">…</div>
+    <input type="text" id="i_neg" placeholder="Írd be a tagadást…">
+    <div class="btns">
+      <button class="primary" id="c_neg">Ellenőrzés</button>
+      <button id="s_neg_show">Mutasd a megoldást</button>
+      <button id="n_neg">Következő</button>
+    </div>
+    <div class="feedback" id="f_neg"></div>
+  </section>
+
+  <section class="panel" id="q">
+    <div class="hint">Alakítsd kérdéssé! Használd a <strong>Did + alany + szótári alak</strong> formát.</div>
+    <div class="sentence" id="s_q">…</div>
+    <input type="text" id="i_q" placeholder="Írd be a kérdést…">
+    <div class="btns">
+      <button class="primary" id="c_q">Ellenőrzés</button>
+      <button id="s_q_show">Mutasd a megoldást</button>
+      <button id="n_q">Következő</button>
+    </div>
+    <div class="feedback" id="f_q"></div>
+  </section>
+
+  <section class="panel" id="mix">
+    <div class="hint">Kevert mód: tagadás vagy kérdés bármelyik jöhet.</div>
+    <div class="sentence" id="s_mix">…</div>
+    <input type="text" id="i_mix" placeholder="Írd be a megoldást…">
+    <div class="btns">
+      <button class="primary" id="c_mix">Ellenőrzés</button>
+      <button id="s_mix_show">Mutasd a megoldást</button>
+      <button id="n_mix">Következő</button>
+    </div>
+    <div class="feedback" id="f_mix"></div>
+  </section>
+</div>
+
+<script>
+// ---------- SCORE SYSTEM ----------
+let score = 0; const scoreEl = document.getElementById('score');
+function addScore(n) { score += n; scoreEl.textContent = score; }
+
+// ---------- DATABASE & DICTIONARIES ----------
+const verbs = {
+  'play': 'played', 'work': 'worked', 'watch': 'watched', 'listen': 'listened', 
+  'cook': 'cooked', 'clean': 'cleaned', 'walk': 'walked', 'wait': 'waited', 
+  'start': 'started', 'finish': 'finished', 'open': 'opened', 'wash': 'washed', 
+  'help': 'helped', 'ask': 'asked', 'live': 'lived', 'like': 'liked', 
+  'love': 'loved', 'close': 'closed', 'arrive': 'arrived', 'study': 'studied', 
+  'try': 'tried', 'stop': 'stopped',
+  'plays': 'played', 'works': 'worked', 'watches': 'watched', 'listens': 'listened', 
+  'cooks': 'cooked', 'cleans': 'cleaned', 'walks': 'walked', 'waits': 'waited', 
+  'starts': 'started', 'finishes': 'finished', 'opens': 'opened', 'washes': 'washed', 
+  'helps': 'helped', 'asks': 'asked', 'lives': 'lived', 'likes': 'liked', 
+  'loves': 'loved', 'closes': 'closed', 'arrives': 'arrived', 'studies': 'studied', 
+  'tries': 'tried', 'stops': 'stopped'
+};
+
+const pastToBase = {
+  'played': 'play', 'worked': 'work', 'watched': 'watch', 'listened': 'listen',
+  'cooked': 'cook', 'cleaned': 'clean', 'walked': 'walk', 'waited': 'wait',
+  'started': 'start', 'finished': 'finish', 'opened': 'open', 'washed': 'wash',
+  'helped': 'help', 'asked': 'ask', 'lived': 'live', 'liked': 'like',
+  'loved': 'love', 'closed': 'close', 'arrived': 'arrive', 'studied': 'study',
+  'tried': 'try', 'stopped': 'stop'
+};
+
+const db_present = [
+  "I play football.","You work hard.","He watches TV.","She listens to music.","We cook dinner.",
+  "They clean the room.","I walk to school.","You wait for the bus.","The lesson starts at eight.",
+  "The movie finishes at ten.","He opens the door.","She washes her face.","We help the teacher.",
+  "They ask a question.","I live in London.","You like pizza.","He loves dogs.","She closes the window.",
+  "We arrive late.","They study English.","I try again.","The bus stops here."
+];
+
+const db_past = [
+  "I played football.","You worked hard.","He watched TV.","She listened to music.","We cooked dinner.",
+  "They cleaned the room.","I walked to school.","You waited for the bus.","The lesson started at eight.",
+  "The movie finished at ten.","He opened the door.","She washed her face.","We helped the teacher.",
+  "They asked a question.","I lived in London.","You liked pizza.","He loved dogs.","She closed the window.",
+  "We arrived late.","They studied English.","I tried again.","The bus stopped here."
+];
+
+// ---------- HELPERS ----------
+const $ = s => document.querySelector(s);
+const normalize = s => s.toLowerCase().replace(/\s+/g,' ').replace(/[.!?]$/,'').trim();
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+// Safely checks if a word is in a string (ignores partial matches like "live" in "lived")
+function hasWord(str, word) {
+  return new RegExp('\\b' + word + '\\b', 'i').test(str);
+}
+
+function parseSentence(s) {
+  const t = s.replace(/[.?!]$/,'').split(' ');
+  let subject = t[0];
+  if ((t[0] === 'The') && t.length > 1) { subject = t[0] + " " + t[1]; }
+  const vIndex = subject.includes(' ') ? 2 : 1;
+  const verb = t[vIndex];
+  const rest = t.slice(vIndex + 1).join(' ');
+  return { subject, verb, rest };
+}
+
+function makePast(s) {
+  const { subject, verb, rest } = parseSentence(s);
+  return cap(`${subject} ${verbs[verb.toLowerCase()]} ${rest}`) + '.';
+}
+
+function makeNegation(s) {
+  const { subject, verb, rest } = parseSentence(s);
+  return cap(`${subject} didn't ${pastToBase[verb.toLowerCase()]} ${rest}`) + '.';
+}
+
+function makeQuestion(s) {
+  const { subject, verb, rest } = parseSentence(s);
+  let subLower = subject.toLowerCase();
+  
+  // Pragmatic shift: If the original subject is I or We, the question should use 'you'
+  if (subLower === 'i' || subLower === 'we') {
+    subLower = 'you';
+  } else if (subject === 'I') {
+    subLower = 'I'; 
+  }
+
+  return `Did ${subLower} ${pastToBase[verb.toLowerCase()]} ${rest}?`;
+}
+
+// Relaxed Feedback UI
+function setFB(sel, ok, expectedText) { 
+  const el = $(sel); 
+  if (ok) {
+    el.innerHTML = `Helyes! <span class="solution-text">A teljes megoldás: ${expectedText}</span>`;
+    el.className = 'feedback ok';
+  } else {
+    el.innerHTML = `Nem egészen. (Figyelj a helyes igealakra!)`;
+    el.className = 'feedback err';
+  }
+}
+
+// ---------- TAB 1: PRESENT TO PAST ----------
+let curToPast, solvedToPast=false, showedToPast=false;
+function nextToPast(){ showedToPast=false; curToPast = db_present[Math.floor(Math.random()*db_present.length)]; $('#s_toPast').textContent=curToPast; $('#i_toPast').value=''; $('#f_toPast').textContent=''; solvedToPast=false; }
+function checkToPast(){ 
+  if(solvedToPast) return; 
+  const val=normalize($('#i_toPast').value); 
+  const { verb } = parseSentence(curToPast);
+  const v_past = verbs[verb.toLowerCase()];
+  
+  // Rule: Just needs to contain the past tense verb!
+  const ok = hasWord(val, v_past); 
+  
+  setFB('#f_toPast', ok, makePast(curToPast)); 
+  if(ok && !showedToPast){addScore(1); solvedToPast=true;} 
+}
+function showToPast(){ showedToPast=true; $('#f_toPast').textContent=makePast(curToPast); $('#f_toPast').className='feedback'; }
+
+// ---------- TAB 2: NEGATION ----------
+let curNeg, solvedNeg=false, showedNeg=false;
+function nextNeg(){ showedNeg=false; curNeg = db_past[Math.floor(Math.random()*db_past.length)]; $('#s_neg').textContent=curNeg; $('#i_neg').value=''; $('#f_neg').textContent=''; solvedNeg=false; }
+function checkNeg(){ 
+  if(solvedNeg) return; 
+  const val=normalize($('#i_neg').value); 
+  const { verb } = parseSentence(curNeg);
+  const v_past = verb.toLowerCase();
+  const v_base = pastToBase[v_past];
+  
+  const isNeg = val.includes("didn't") || val.includes("did not");
+  // Rule: Must be negative, MUST contain base verb, MUST NOT contain past verb
+  const ok = isNeg && hasWord(val, v_base) && !hasWord(val, v_past);
+  
+  setFB('#f_neg', ok, makeNegation(curNeg)); 
+  if(ok && !showedNeg){addScore(1); solvedNeg=true;} 
+}
+function showNeg(){ showedNeg=true; $('#f_neg').textContent=makeNegation(curNeg); $('#f_neg').className='feedback'; }
+
+// ---------- TAB 3: QUESTION ----------
+let curQ, solvedQ=false, showedQ=false;
+function nextQ(){ showedQ=false; curQ = db_past[Math.floor(Math.random()*db_past.length)]; $('#s_q').textContent=curQ; $('#i_q').value=''; $('#f_q').textContent=''; solvedQ=false; }
+function checkQ(){ 
+  if(solvedQ) return; 
+  const val=normalize($('#i_q').value); 
+  const { verb } = parseSentence(curQ);
+  const v_past = verb.toLowerCase();
+  const v_base = pastToBase[v_past];
+  
+  // Rule: Must have "did", MUST have base verb, MUST NOT have past verb
+  const ok = hasWord(val, "did") && hasWord(val, v_base) && !hasWord(val, v_past);
+  
+  setFB('#f_q', ok, makeQuestion(curQ)); 
+  if(ok && !showedQ){addScore(1); solvedQ=true;} 
+}
+function showQ(){ showedQ=true; $('#f_q').textContent=makeQuestion(curQ); $('#f_q').className='feedback'; }
+
+// ---------- TAB 4: MIX ----------
+let curMix, curMixKind, solvedMix=false, showedMix=false;
+function nextMix(){ 
+  showedMix=false; 
+  curMix = db_past[Math.floor(Math.random()*db_past.length)]; 
+  curMixKind = Math.random() < 0.5 ? 'neg' : 'q'; 
+  $('#s_mix').innerHTML = curMix + ' <span class="pill score-pill" style="margin-left:8px">' + (curMixKind==='neg'?'Tagadás':'Kérdés') + '</span>'; 
+  $('#i_mix').value=''; $('#f_mix').textContent=''; solvedMix=false; 
+}
+function checkMix(){ 
+  if(solvedMix) return; 
+  const val=normalize($('#i_mix').value); 
+  const { verb } = parseSentence(curMix);
+  const v_past = verb.toLowerCase();
+  const v_base = pastToBase[v_past];
+  const good = curMixKind === 'neg' ? makeNegation(curMix) : makeQuestion(curMix);
+  
+  let ok = false;
+  if(curMixKind === 'neg') {
+    const isNeg = val.includes("didn't") || val.includes("did not");
+    ok = isNeg && hasWord(val, v_base) && !hasWord(val, v_past);
+  } else {
+    ok = hasWord(val, "did") && hasWord(val, v_base) && !hasWord(val, v_past);
+  }
+  
+  setFB('#f_mix', ok, good); 
+  if(ok && !showedMix){addScore(1); solvedMix=true;} 
+}
+function showMix(){ 
+  showedMix=true; 
+  $('#f_mix').textContent = curMixKind==='neg' ? makeNegation(curMix) : makeQuestion(curMix); 
+  $('#f_mix').className='feedback'; 
+}
+
+// ---------- EVENT LISTENERS ----------
+document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+}));
+
+$('#c_toPast').onclick=checkToPast; $('#s_toPast_show').onclick=showToPast; $('#n_toPast').onclick=nextToPast;
+$('#c_neg').onclick=checkNeg; $('#s_neg_show').onclick=showNeg; $('#n_neg').onclick=nextNeg;
+$('#c_q').onclick=checkQ; $('#s_q_show').onclick=showQ; $('#n_q').onclick=nextQ;
+$('#c_mix').onclick=checkMix; $('#s_mix_show').onclick=showMix; $('#n_mix').onclick=nextMix;
+
+$('#resetScore').onclick = () => { score=0; scoreEl.textContent='0'; };
+$('#newSeed').onclick = () => { nextToPast(); nextNeg(); nextQ(); nextMix(); };
+
+// Enter key & Flash visual effect
+function flashInput(el, ok) {
+  el.classList.remove('flash-ok', 'flash-err');
+  void el.offsetWidth;
+  el.classList.add(ok ? 'flash-ok' : 'flash-err');
+  setTimeout(() => el.classList.remove('flash-ok', 'flash-err'), 1000);
+}
+
+function setupInput(inputId, checkFn, fbId) {
+  const el = document.getElementById(inputId);
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkFn();
+      setTimeout(() => {
+        const fb = document.getElementById(fbId);
+        const ok = fb && fb.classList.contains('ok');
+        flashInput(el, ok);
+      }, 0);
+    }
+  });
+  el.addEventListener('input', () => el.classList.remove('flash-ok', 'flash-err'));
+}
+
+setupInput('i_toPast', checkToPast, 'f_toPast');
+setupInput('i_neg', checkNeg, 'f_neg');
+setupInput('i_q', checkQ, 'f_q');
+setupInput('i_mix', checkMix, 'f_mix');
+
+// Init
+nextToPast(); nextNeg(); nextQ(); nextMix();
+</script>
+</body>
+</html>
